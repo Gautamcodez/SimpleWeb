@@ -27,19 +27,36 @@ function addDecimal() {
     }
 }
 
+//  Calculate first and second values depending upon the operators
+const calculate = {
+    '/': (firsNumber, secondNumber) => firsNumber/secondNumber,
+    '*': (firsNumber, secondNumber) => firsNumber*secondNumber,
+    '+': (firsNumber, secondNumber) => firsNumber+secondNumber,
+    '-': (firsNumber, secondNumber) => firsNumber-secondNumber,
+}; 
+
 function useOperator(operator) {
     const currentValue = Number(calculatorDisplay.textContent);
+    // Prevent multiple operator
+    if (operatorValue && awaitingNextValue) {
+        operatorValue = operator;
+        return;
+    } ;
     // Assign firstValue if no value
     if (!firstValue) {
         firstValue = currentValue;
     } else {
-        console.log('currentValue', currentValue);
+        // console.log(firstValue, operatorValue, currentValue);
+        const calculation = calculate[operatorValue](firstValue, currentValue);
+        // console.log('calculation', calculation);
+        calculatorDisplay.textContent = calculation;
+        firstValue = calculation;
     }
     // ready for the next value store for our operator
     awaitingNextValue = true;
     operatorValue = operator;
-    console.log('firstValue', firstValue);
-    console.log('operatorValue', operator);
+    // console.log('firstValue', firstValue);
+    // console.log('operatorValue', operator);
 }
 
 // Add event listners to numbers, operators, decimal buttons
@@ -53,7 +70,7 @@ inputBtns.forEach((inputBtn) => {
     }
 });
 
-//   reset display
+// Reset display
 function resetDisplay() {
     firstValue = 0;
     operatorValue = '';
