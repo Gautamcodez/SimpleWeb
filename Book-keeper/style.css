@@ -110,8 +110,8 @@ a:active {
   width: 500px;
   animation: modalopen 1s;
   margin: auto;
-  position: relative;
-  top: 30%;
+  /* position: relative;
+  top: 30%; */
 }
 
 @keyframes modalopen {
