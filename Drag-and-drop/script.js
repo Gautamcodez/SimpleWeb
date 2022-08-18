@@ -56,6 +56,12 @@ function updateSavedColumns() {
 //   localStorage.setItem('onHoldItems', JSON.stringify(onHoldListArray));
 // }
 
+// Filter Array to remove empty values
+function filterArray(array) {
+  const filteredArray = array.filter(item => item !== null);
+  return filteredArray;
+}
+
 // Create DOM Elements for each list item
 function createItemEl(columnEl, column, item, index) {
   // console.log('columnEl:', columnEl);
@@ -119,6 +125,20 @@ function allowDrop(e) {
 function dragEnter(column) {
   listColumns[column].classList.add('over');
   currentColumn = column;
+}
+
+// Update Item - Delete if necessary, or update Array value
+function updateItem(id, column) {
+  const selectedArray = listArrays[column];
+  const selectedColumn = listColumns[column].children;
+  if (!dragging) {
+    if (!selectedColumn[id].textContent) {
+      delete selectedArray[id];
+    } else {
+      selectedArray[id] = selectedColumn[id].textContent;
+    }
+    updateDOM();
+  }
 }
 
 // Add to column list, reset textbox
