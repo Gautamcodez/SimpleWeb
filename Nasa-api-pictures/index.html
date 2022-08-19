@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,11 +8,52 @@
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/png" href="https://s2.googleusercontent.com/s2/favicons?domain=www.nasa.gov">
 </head>
+
 <body>
-    <div class="loader">
-        <img src="rocket.svg" alt="Rocket loading Animation">
+    <!-- Loader -->
+    <div class="loader hidden">
+        <img src="rocket.svg" alt="Rocket Loading Animation">
+    </div>
+    <!-- Container -->
+    <div class="container">
+        <!-- Navigation -->
+        <div class="navigation-container">
+            <span class="background"></span>
+            <!-- Results Nav -->
+            <span class="navigation-items" id="resultsNav">
+                <h3 class="clickable" onclick="updateDOM('favorites')">Favorites</h3>
+                <h3>&nbsp;&nbsp;&nbsp;•&nbsp;&nbsp;&nbsp;</h3>
+                <h3 class="clickable" onclick="getNasaPictures()">Load More</h3>
+            </span>
+            <!-- Favorites Nav -->
+            <span class="navigation-items hidden" id="favoritesNav">
+                <h3 class="clickable" onclick="getNasaPictures()">Load More NASA Images</h3>
+            </span>
+        </div>
+        <!-- Images Container -->
+        <div class="images-container">
+            <div class="card">
+                <a href="" title="View full image" target="_blank">
+                    <img src="https://apod.nasa.gov/apod/image/2208/Saturn1993-2022Lb.jpg" alt="Nasa picture of the day" class="card-img-top">
+                </a>
+                <div class="card-body">
+                    <h5 class="card-title">Title of the Image</h5>
+                    <p class="clickable">Add to Favourites</p>
+                    <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Eum tenetur facere itaque, eius non deleniti incidunt natus sed beatae nihil maiores vero consequuntur officia est id sint distinctio assumenda culpa?</p>
+                    <small class="text-muted">
+                        <strong>19-08-2022</strong>
+                        <span>Copyright Info</span>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Save Confirmation -->
+    <div class="save-confirmed" hidden>
+        <h1>ADDED!</h1>
     </div>
     <!-- Script -->
     <script src="script.js"></script>
 </body>
+
 </html>
