@@ -10,11 +10,24 @@ const apiKey = 'DEMO_KEY';
 const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&count=${count}`;
 
 let resultsArray = '';
-let favourites = {};
+let favorites = {};
+
+// Scroll To Top, Remove Loader, Show Content
+function showContent(page) {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    loader.classList.add('hidden');
+    if (page === 'results') {
+      resultsNav.classList.remove('hidden');
+      favoritesNav.classList.add('hidden');
+    } else {
+      resultsNav.classList.add('hidden');
+      favoritesNav.classList.remove('hidden');
+    }
+  }
 
 function createDOMNodes(page) {
     // Load ResultsArray or Favorites
-    const currentArray = page === 'results' ? resultsArray : Object.values(favourites);
+    const currentArray = page === 'results' ? resultsArray : Object.values(favorites);
     currentArray.forEach((result) => {
         // Card Container
         const card = document.createElement('div');
@@ -72,7 +85,7 @@ function createDOMNodes(page) {
 function updateDOM() {
     // Get Favorites from localStorage
     if (localStorage.getItem('nasaFavorites')) {
-        favourites = JSON.parse(localStorage.getItem('nasaFavorites'));
+        favorites = JSON.parse(localStorage.getItem('nasaFavorites'));
     }
     // Reset DOM, Create DOM Nodes, Show Content
     imagesContainer.textContent = '';
@@ -96,8 +109,8 @@ async function getNasaPictures() {
 function saveFavorite(itemUrl) {
     // Loop through Results Array to select Favorite
     resultsArray.forEach((item) => {
-        if (item.url.includes(itemUrl) && !favourites[itemUrl]) {
-            favourites[itemUrl] = item;
+        if (item.url.includes(itemUrl) && !favorites[itemUrl]) {
+            favorites[itemUrl] = item;
             // Show Save Confirmation for 2 seconds
             saveConfirmed.hidden = false;
             setTimeout(() => {
@@ -108,6 +121,16 @@ function saveFavorite(itemUrl) {
         }
     });
 }
+
+// Remove item from Favorites
+function removeFavorite(itemUrl) {
+    if (favorites[itemUrl]) {
+      delete favorites[itemUrl];
+      // Set Favorites in localStorage
+      localStorage.setItem('nasaFavorites', JSON.stringify(favorites));
+      updateDOM('favorites');
+    }
+  }
 
 // On load
 getNasaPictures();
