@@ -10,9 +10,12 @@ const apiKey = 'DEMO_KEY';
 const apiUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}&count=${count}`;
 
 let resultsArray = '';
+let favourites = {};
 
-function updateDOM() {
-    resultsArray.forEach((result) => {
+function createDOMNodes(page) {
+    // Load ResultsArray or Favorites
+    const currentArray = page === 'results' ? resultsArray : Object.values(favourites);
+    currentArray.forEach((result) => {
         // Card Container
         const card = document.createElement('div');
         card.classList.add('card');
@@ -37,7 +40,13 @@ function updateDOM() {
         // Save Text
         const saveText = document.createElement('p');
         saveText.classList.add('clickable');
-        saveText.textContent = 'Add to Favourites';
+        if (page === 'results') {
+            saveText.textContent = 'Add To Favorites';
+            saveText.setAttribute('onclick', `saveFavorite('${result.url}')`);
+        } else {
+            saveText.textContent = 'Remove Favorite';
+            saveText.setAttribute('onclick', `removeFavorite('${result.url}')`);
+        }
         // Card Text
         const cardText = document.createElement('p');
         cardText.textContent = result.explanation;
@@ -60,16 +69,44 @@ function updateDOM() {
     });
 }
 
+function updateDOM() {
+    // Get Favorites from localStorage
+    if (localStorage.getItem('nasaFavorites')) {
+        favourites = JSON.parse(localStorage.getItem('nasaFavorites'));
+    }
+    // Reset DOM, Create DOM Nodes, Show Content
+    imagesContainer.textContent = '';
+    createDOMNodes(page);
+    showContent(page);
+}
+
 //  Get 10 images form NASA APi
 async function getNasaPictures() {
     try {
         const response = await fetch(apiUrl);
         resultsArray = await response.json();
         console.log(resultsArray);
-        updateDOM();
+        updateDOM('results');
     } catch (error) {
         // Catch Error here
     }
+}
+
+// Add result to Favorites
+function saveFavorite(itemUrl) {
+    // Loop through Results Array to select Favorite
+    resultsArray.forEach((item) => {
+        if (item.url.includes(itemUrl) && !favourites[itemUrl]) {
+            favourites[itemUrl] = item;
+            // Show Save Confirmation for 2 seconds
+            saveConfirmed.hidden = false;
+            setTimeout(() => {
+                saveConfirmed.hidden = true;
+            }, 2000);
+            // Set Favorites in localStorage
+            localStorage.setItem('nasaFavorites', JSON.stringify(favorites));
+        }
+    });
 }
 
 // On load
